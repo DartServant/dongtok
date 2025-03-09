@@ -16,4 +16,4 @@ async def on_ready():
 async def hello(ctx):
     await ctx.send(f'สวัสดี {ctx.author.mention}! 😊')
 
-bot.run(os.getenv('Bot'))
+bot.run(os.getenv('SYPHON'))
