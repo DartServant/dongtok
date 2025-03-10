@@ -100,21 +100,22 @@ async def on_message(message):
         "แม่": ["ควยไร", "อะไรอะ", "มึงบ้า", "เสร่อ", "เสือก", "หลอน"],
         "โง่": ["ควยไร", "อะไรอะ", "หลอน", "เสร่อ", "เสือก", "มึงบ้าป้ะ", "ไปนอนนะ"],
         "หลอน": ["เต็มเปล่า", "ไปนอนนะ", "ไร", "เสร่อ", "เสือก", "มึงบ้าอ่อ"],
-        "ไร": ["ฟุนจึง", "ไอควาย", "แล้วควยไร", "ไม่ต้องเสือกเนาะ", "ไอปากแหว่ง"],
+        "ไร": ["มุนซึง", "ไอควาย", "แล้วควยไร", "ไม่ต้องเสือกเนาะ", "ไอปากแหว่ง"],
+        "ด่า": ["หรอไอเหี้ย", "ไอหมูเป๋", "ไอพิการ", "รั่วจัด", "ไอตาโบ๋","จะสื่อไร","อย่างโง่"],
     }
 
     lower_message = message.content.lower()
-    response = None  # เพิ่มตัวแปร response
+    response = None
 
     for key, responses in responses_dict.items():
         if key in lower_message:
             response = random.choice(responses)
-            break  # ให้บอทตอบแค่ข้อความแรกที่เจอ
+            break
 
     if response:
-        await message.channel.send(response)  # ให้บอทตอบกลับก่อน
-    await bot.process_commands(message)  # แล้วค่อยรันคำสั่งบอท
-
+        await message.channel.send(response)
+    await bot.process_commands(message)
+  
 
 @bot.command()
 async def exp(ctx):
