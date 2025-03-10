@@ -65,7 +65,24 @@ async def check_and_give_role(member, level):
         if level >= lvl and role and role not in member.roles:
             await member.add_roles(role)
           
+@bot.event
+async def on_message(message):
+    if message.author.bot:
+        return
+      
+    if "ควย" in message.content.lower():
+        responses = ["ควยไร", "อะไรอะ", "มึงบ้าหรอ", "เสร่อ","เสือก"]
+        await message.channel.send(random.choice(responses))
+        
+    elif "55" in message.content.lower():
+        responses = ["ขำไร", "เอ๋อ", "", "🙄🙄","ลิงจัด"]
+        await message.channel.send(random.choice(responses))
 
+    elif "เหี้ย" in message.content.lower():
+        responses = ["เหี้ยไร", "อะไรอะ", "มึงบ้าหรอ", "เสร่อจัด","เสือก"]
+        await message.channel.send(random.choice(responses))
+
+    await bot.process_commands(message)
 
 @bot.command()
 @commands.is_owner()
