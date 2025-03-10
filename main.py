@@ -1,11 +1,12 @@
 import os
 import discord
+import json
 from myserver import server_on
 from discord.ext import commands, tasks
+
 from datetime import datetime, timedelta
 import asyncio
 
-# ตั้งค่า intents
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
@@ -24,72 +25,94 @@ EXP_ROLE_IDS = {
     80: 1348598239619711079,
     90: 1348598231533355078,
     100: 1348598227246645360
-}  # ใส่ ID ของ Roles ตามระดับเลเวล
+}
 
-USER_EXP = {}  # เก็บ EXP ของแต่ละคน {user_id: (exp, level)}
-EXP_RATE = 2.5  # 1 นาที = 2.5 EXP
+EXP_PER_MINUTE = 2.5
+EXP_FILE = "exp_data.json"
+USER_EXP = {}
+
+
+def load_exp():
+    global USER_EXP
+    if os.path.exists(EXP_FILE):
+        with open(EXP_FILE, "r") as f:
+            USER_EXP = json.load(f)
+        USER_EXP = {int(k): (float(v[0]), int(v[1])) for k, v in USER_EXP.items()}
+
+
+def save_exp():
+    with open(EXP_FILE, "w") as f:
+        json.dump(USER_EXP, f, indent=4)
+
 
 @bot.event
 async def on_ready():
+    load_exp()
     server_on()
     update_exp.start()
 
+
 @bot.event
 async def on_voice_state_update(member, before, after):
-    """ให้ Role เมื่อเข้าห้องเสียง และลบ Role เมื่อออก"""
     if member.bot:
         return
     guild = member.guild
-    # ID ของ Role ที่ต้องการให้เมื่อเข้าห้องเสียง
-    VC_ROLE_ID = 1348584551261147197  # ใส่ ID ของ Role ที่ต้องการให้
+    VC_ROLE_ID = 1348584551261147197
 
-    # ถ้าเข้าห้องเสียง
     if after.channel:
         if member.id not in USER_EXP:
-            USER_EXP[member.id] = (0, 1)  # เริ่มต้น EXP และ Level
+            USER_EXP[member.id] = (0, 1)
         role = guild.get_role(VC_ROLE_ID)
         if role and role not in member.roles:
             await member.add_roles(role)
 
-    # ถ้าออกห้องเสียง
     elif before.channel and not after.channel:
         role = guild.get_role(VC_ROLE_ID)
         if role and role in member.roles:
             await member.remove_roles(role)
 
+    save_exp()
+
+
 @tasks.loop(minutes=1)
 async def update_exp():
-    """เพิ่ม EXP ทุกนาทีเมื่ออยู่ในห้องเสียง"""
     for guild in bot.guilds:
         for member in guild.members:
-            if member.voice and member.voice.channel:  # ตรวจสอบว่าอยู่ในห้องเสียง
+            if member.voice and member.voice.channel:
                 exp, level = USER_EXP.get(member.id, (0, 1))
-                exp += EXP_RATE  # เพิ่ม EXP ทุกๆ 1 นาที
-                next_level_exp = (level ** 2) * 50  # คำนวณ EXP ที่ต้องการในการเลื่อนเลเวล
-                if exp >= next_level_exp and level < 100:  # ถ้า EXP มากพอที่จะอัพเลเวล
+                exp += EXP_PER_MINUTE
+                next_level_exp = (level ** 2) * 50
+                if exp >= next_level_exp and level < 100:
                     level += 1
                     exp -= next_level_exp
-                    await check_and_give_role(member, level)  # ให้ Role ตามเลเวล
-                USER_EXP[member.id] = (exp, level)  # อัพเดต EXP และ Level
+                    await check_and_give_role(member, level)
+                USER_EXP[member.id] = (exp, level)
+    save_exp()
+
 
 async def check_and_give_role(member, level):
-    """มอบ Role ใหม่ทุก 10 เลเวล"""
     guild = member.guild
     for lvl, role_id in EXP_ROLE_IDS.items():
         role = guild.get_role(role_id)
-        if level >= lvl and role and role not in member.roles:  # เช็คว่าเลเวลถึงแล้วหรือยัง
-            await member.add_roles(role)  # มอบ Role
+        if level >= lvl and role and role not in member.roles:
+            await member.add_roles(role)
+
 
 @bot.command()
 async def exp(ctx):
-    """แสดง EXP ปัจจุบันและเลเวลของผู้ใช้"""
     user_id = ctx.author.id
     exp, level = USER_EXP.get(user_id, (0, 1))
-    next_level_exp = (level ** 2) * 50  # คำนวณ EXP ที่ต้องใช้ในการอัพเลเวลถัดไป
-    progress = int((exp / next_level_exp) * 10)  # คำนวณเปอร์เซ็นต์เป็นแท่ง
-    bar = "█" * progress + "-" * (10 - progress)  # แสดง Progress Bar
-    percentage = (exp / next_level_exp) * 100  # คำนวณเปอร์เซ็นต์ที่เป็นตัวเลข
+    next_level_exp = (level ** 2) * 50
+    progress = int((exp / next_level_exp) * 10)
+    bar = "█" * progress + "-" * (10 - progress)
+    percentage = (exp / next_level_exp) * 100
     
-    await ctx.send(f"{ctx.author.mention} ➤ เลเวล: {level} | EXP: {int(exp)} / {next_level_exp}\n[{bar}] ({percentage:.1f}%)")
+    await ctx.send(f"{ctx.author.mention} \u279e เลเวล: {level} | EXP: {int(exp)} / {next_level_exp}\n[{bar}] ({percentage:.1f}%)")
+
+
+@bot.event
+async def on_disconnect():
+    save_exp()
+
 
 bot.run(os.getenv('SYPHON'))
