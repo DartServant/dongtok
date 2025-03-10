@@ -22,8 +22,14 @@ USER_EXP = {}
 running_task = False
 
 if os.path.exists(EXP_FILE):
-    with open(EXP_FILE, "r") as f:
-        USER_EXP = json.load(f)
+    try:
+        with open(EXP_FILE, "r") as f:
+            USER_EXP = json.load(f)
+            if not isinstance(USER_EXP, dict):  # ถ้าข้อมูลไม่ใช่ dict ให้เริ่มใหม่
+                USER_EXP = {}
+    except (json.JSONDecodeError, ValueError):
+        USER_EXP = {}  # ถ้าไฟล์มีปัญหา ให้ใช้ค่าเริ่มต้น
+
 
 @bot.event
 async def on_ready():
@@ -35,7 +41,7 @@ async def on_ready():
     server_on()
     update_exp.start()
 
-@tasks.loop(minutes=1)
+@tasks.loop(seconds=30)  # ⏳ เปลี่ยนจาก 1 นาที เป็น 30 วินาที
 async def update_exp():
     for guild in bot.guilds:
         for member in guild.members:
@@ -48,7 +54,9 @@ async def update_exp():
                     exp -= next_level_exp
                     await check_and_give_role(member, level)
                 USER_EXP[str(member.id)] = (exp, level)
-    save_exp_data()
+    
+    save_exp_data()  # ✅ เซฟ EXP ทุก 30 วินาที
+
 
 async def check_and_give_role(member, level):
     guild = member.guild
@@ -104,10 +112,18 @@ async def exp(ctx):
     progress = int((exp / next_level_exp) * 10)
     bar = "█" * progress + "-" * (10 - progress)
     percentage = (exp / next_level_exp) * 100
+    
+    save_exp_data()  # ✅ บันทึก EXP ทุกครั้งที่เรียก d!exp
+    
     await ctx.send(f"{ctx.author.mention} ➤ เลเวล: {level} | EXP: {int(exp)} / {next_level_exp}\n[{bar}] ({percentage:.1f}%)")
+
 
 def save_exp_data():
     with open(EXP_FILE, "w") as f:
         json.dump(USER_EXP, f, indent=4)
+
+@bot.event
+async def on_disconnect():
+    save_exp_data()  # บันทึก EXP ก่อนปิดบอท
 
 bot.run(os.getenv('SYPHON'))
