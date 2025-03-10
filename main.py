@@ -18,18 +18,17 @@ intents.members = True
 intents.voice_states = True
 
 bot = commands.Bot(command_prefix="d!", intents=intents)
-USER_EXP = {}
+
 running_task = False
 
 if os.path.exists(EXP_FILE):
     try:
         with open(EXP_FILE, "r") as f:
             USER_EXP = json.load(f)
-            if not isinstance(USER_EXP, dict):  # ถ้าข้อมูลไม่ใช่ dict ให้เริ่มใหม่
-                USER_EXP = {}
+            if not isinstance(USER_EXP, dict) or not USER_EXP:  
+                USER_EXP = {}  
     except (json.JSONDecodeError, ValueError):
-        USER_EXP = {}  # ถ้าไฟล์มีปัญหา ให้ใช้ค่าเริ่มต้น
-
+        USER_EXP = {}  
 
 @bot.event
 async def on_ready():
