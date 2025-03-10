@@ -2,6 +2,7 @@ import os
 import discord
 import json
 import asyncio
+import random
 from myserver import server_on
 from discord.ext import commands, tasks
 
@@ -84,6 +85,12 @@ async def on_message(message):
 
     await bot.process_commands(message)  # ✅ ให้แน่ใจว่าบอทยังสามารถรันคำสั่งได้
 
+@bot.command()
+@commands.is_owner()
+async def pidbot(ctx):
+    await ctx.send("🛑 ออฟละ ควย.")
+    save_exp_data()  # ✅ บันทึกข้อมูลก่อนปิดบอท
+    await bot.close()
 
 @bot.command()
 async def exp(ctx):
