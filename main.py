@@ -62,7 +62,9 @@ async def pidbot(ctx):
     await ctx.send("🛑 ออฟละ ควย.")
     update_exp.cancel()
     save_exp_data()
-    await bot.close()
+    await asyncio.sleep(1)  # รอให้ข้อมูลถูกบันทึกลงไฟล์ก่อน
+    os._exit(0)  # ปิดโปรแกรมทันทีแบบปลอดภัย
+
 
 @bot.command()
 async def exp(ctx):
