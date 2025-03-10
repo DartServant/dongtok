@@ -27,6 +27,10 @@ if os.path.exists(EXP_FILE):
         data = json.load(f)
         if data.get("version") == DATA_VERSION:
             USER_EXP = data.get("exp_data", {})
+        else:
+            USER_EXP = {}  # ถ้าเวอร์ชันไม่ตรง ให้ใช้ข้อมูลใหม่
+else:
+    USER_EXP = {}  # ถ้าไม่มีไฟล์ ให้เริ่มใหม่
 
 @bot.event
 async def on_ready():
@@ -52,7 +56,7 @@ async def update_exp():
                     exp -= next_level_exp
                     await check_and_give_role(member, level)
                 USER_EXP[str(member.id)] = (exp, level)
-    save_exp_data()
+    save_exp_data()  # ✅ บันทึกไฟล์ทุกครั้งที่อัปเดต
 
 async def check_and_give_role(member, level):
     guild = member.guild
@@ -63,27 +67,12 @@ async def check_and_give_role(member, level):
           
 
 
-@bot.event
-async def on_message(message):
-    if message.author.bot:
-        return
-      
-    if "ควย" in message.content.lower():
-        responses = ["ควยไร", "อะไรอะ", "มึงบ้าหรอ", "เสร่อ"]
-        await message.channel.send(random.choice(responses))
-        
-    elif "555" in message.content.lower():
-        responses = ["หัวเราะไรไอหัวเหลี่ยม", "กุเจอเด็กเอ๋อ", "", "🙄🙄"]
-        await message.channel.send(random.choice(responses))
-
-    await bot.process_commands(message)
-  
-
 @bot.command()
 @commands.is_owner()
 async def pidbot(ctx):
     await ctx.send("🛑 ออฟละ ควย.")
     update_exp.cancel()
+    save_exp_data()  # ✅ บันทึกข้อมูลก่อนปิดบอท
     await bot.close()
 
 @bot.command()
