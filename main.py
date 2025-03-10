@@ -18,7 +18,7 @@ intents.members = True
 intents.voice_states = True
 
 bot = commands.Bot(command_prefix="d!", intents=intents)
-
+USER_EXP = {}
 running_task = False
 
 if os.path.exists(EXP_FILE):
@@ -90,6 +90,8 @@ async def on_message(message):
         "ตลก": ["ขำขี้แตก", "หุบปาก", "ฮ่าฮ่า", "ก็ตลกไง", "ขำกลิ้ง"],
         "จอก": ["มึงควรนอน", "สภาพ", "ไม่ได้ถาม", "ไม่ต้องเสือก", "ไอหูตุ่น"],
         "ยุ่ง": ["กูถามหรอ", "สภาพ", "พ่อมึงอ่ะ", "โง่", "ไอหน้าหี"],
+        "พ่อ": ["ควยไร", "อะไรอะ", "หลอน", "เสร่อ", "เสือก", "มึงบ้า"],
+        "แม่": ["ควยไร", "อะไรอะ", "มึงบ้า", "เสร่อ", "เสือก", "หลอน"],
     }
 
     lower_message = message.content.lower()
