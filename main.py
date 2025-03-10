@@ -64,34 +64,29 @@ async def check_and_give_role(member, level):
         role = guild.get_role(role_id)
         if level >= lvl and role and role not in member.roles:
             await member.add_roles(role)
-          
+
 @bot.event
 async def on_message(message):
     if message.author.bot:
         return
-      
-    if "ควย" in message.content.lower():
-        responses = ["ควยไร", "อะไรอะ", "มึงบ้าหรอ", "เสร่อ","เสือก"]
-        await message.channel.send(random.choice(responses))
-        
-    elif "55" in message.content.lower():
-        responses = ["ขำไร", "เอ๋อ", "", "ตลกอ่อ","ลิงจัด"]
-        await message.channel.send(random.choice(responses))
 
-    elif "เหี้ย" in message.content.lower():
-        responses = ["เหี้ยไร", "อะไรอะ", "มึงบ้าหรอ", "เสร่อจัด","เสือก"]
-        await message.channel.send(random.choice(responses))
+    responses_dict = {
+        "ควย": ["ควยไร", "อะไรอะ", "มึงบ้าหรอ", "เสร่อ", "เสือก"],
+        "55": ["ขำไร", "เอ๋อ", "", "ตลกอ่อ", "ลิงจัด"],
+        "เหี้ย": ["เหี้ยไร", "อะไรอะ", "มึงบ้าหรอ", "เสร่อจัด", "เสือก"],
+        "ควาย": ["ควยไร", "อะไรมึง", "มึงอะหรอ", "เสร่อจัง", "ไปนอนมั้ย"],
+        "ดแม่": ["แม่มึงอ่ะ", "ไอหน้าหี", "ไอหูตุ่น", "ไม่ต้องเสือก", "แม่มึงอะ"],
+        "เสือก": ["พ่อมึงอ่ะ", "ไอหน้าหี", "ไอเหลือขอ", "ไม่ต้องเสือก", "ไอลิง"],
+        "ดอกทอง": ["แม่มึงสิดอกทอง", "กูถามหรอ", "อย่ามึน", "ไอฮิปโป", "ไอลิง"]
+    }
 
-    elif "ควาย" in message.content.lower():
-        responses = ["ควยไร", "อะไรมึง", "มึงอะหรอ", "เสร่อจัง","ไปนอนมั้ย"]
-        await message.channel.send(random.choice(responses))
-
-    elif "ยดแม่" in message.content.lower():
-        responses = ["แม่มึงอ่ะ", "ไอหน้าหี", "ไอหูตุ่น55", "ไม่ต้องเสือก", "แม่มึงอะ"]
-        await message.channel.send(random.choice(responses))
+    for key, responses in responses_dict.items():
+        if key in message.content.lower():
+            await message.channel.send(random.choice(responses))
+            break  # หยุดการตรวจสอบทันทีที่เจอคำแรก
 
     await bot.process_commands(message)
-
+  
 @bot.command()
 @commands.is_owner()
 async def pidbot(ctx):
