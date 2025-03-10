@@ -18,6 +18,7 @@ intents.voice_states = True
 
 bot = commands.Bot(command_prefix="d!", intents=intents)
 USER_EXP = {}
+running_task = False
 
 if os.path.exists(EXP_FILE):
     with open(EXP_FILE, "r") as f:
@@ -25,6 +26,11 @@ if os.path.exists(EXP_FILE):
 
 @bot.event
 async def on_ready():
+    global running_task
+    if running_task:
+        await bot.close()
+        return
+    running_task = True
     server_on()
     update_exp.start()
 
