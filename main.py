@@ -75,11 +75,19 @@ async def on_message(message):
         await message.channel.send(random.choice(responses))
         
     elif "55" in message.content.lower():
-        responses = ["ขำไร", "เอ๋อ", "", "🙄🙄","ลิงจัด"]
+        responses = ["ขำไร", "เอ๋อ", "", "ตลกอ่อ","ลิงจัด"]
         await message.channel.send(random.choice(responses))
 
     elif "เหี้ย" in message.content.lower():
         responses = ["เหี้ยไร", "อะไรอะ", "มึงบ้าหรอ", "เสร่อจัด","เสือก"]
+        await message.channel.send(random.choice(responses))
+
+    elif "ควาย" in message.content.lower():
+        responses = ["ควยไร", "อะไรมึง", "มึงอะหรอ", "เสร่อจัง","ไปนอนมั้ย"]
+        await message.channel.send(random.choice(responses))
+
+  elif ["เย็ดแม่","เยดแม่","เยสแม่","เย้ดแม่"] in message.content.lower():
+        responses = ["ควยไร", "ไก่", "กา", "หมา","หมู"]
         await message.channel.send(random.choice(responses))
 
     await bot.process_commands(message)
