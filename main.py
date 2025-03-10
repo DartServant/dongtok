@@ -10,7 +10,6 @@ EXP_FILE = "exp_data.json"
 EXP_ROLE_IDS = {10: 1345467425499385886, 20: 1345467017003536384, 30: 1345802923493298286,
                 40: 1348597989760958544, 50: 1348597995775590450, 60: 1348597982093774869,
                 70: 1348598235861880844, 80: 1348598239619711079, 90: 1348598231533355078, 100: 1348598227246645360}
-VC_ROLE_ID = 1348584551261147197
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -32,23 +31,12 @@ if os.path.exists(EXP_FILE):
 async def on_ready():
     global running_task
     if running_task:
-        print("⚠️ บอทพยายามรันซ้ำ กำลังปิดตัวเอง...")
+        
         await bot.close()
         return
     server_on()
     update_exp.start()
     running_task = True
-
-@bot.event
-async def on_voice_state_update(member, before, after):
-    if member.bot:
-        return
-    guild = member.guild
-    role = guild.get_role(VC_ROLE_ID)
-    if after.channel and role and role not in member.roles:
-        await member.add_roles(role)
-    elif not after.channel and role and role in member.roles:
-        await member.remove_roles(role)
 
 @tasks.loop(minutes=1)
 async def update_exp():
@@ -71,11 +59,28 @@ async def check_and_give_role(member, level):
         role = guild.get_role(role_id)
         if level >= lvl and role and role not in member.roles:
             await member.add_roles(role)
+          
+@bot.event
+async def on_message(message):
+    if message.author.bot:
+        return  # ไม่ตอบกลับบอทด้วยกันเอง
+
+    # 🔥 ตอบกลับตามข้อความที่กำหนด
+    if message.content.lower() == ".อิดอก":
+        await message.channel.send("?")
+    elif message.content.lower() == ".ตื่นยังวะ":
+        await message.channel.send("ตื่นแล้วเย็สแม่!")
+    
+    # เพิ่มข้อความที่อยากให้บอทตอบตามต้องการตรงนี้
+
+    await bot.process_commands(message)  # ทำให้คำสั่งอื่น ๆ ยังใช้ได้
+
 
 @bot.command()
 @commands.is_owner()
 async def shutdown(ctx):
-    await ctx.send("🛑 Test")
+    await ctx.send("🛑 ออฟละ ควย.")
+    update_exp.cancel()
     await bot.close()
 
 @bot.command()
