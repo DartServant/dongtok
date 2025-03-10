@@ -31,7 +31,7 @@ EXP_RATE = 2.5  # 1 นาที = 2.5 EXP
 
 @bot.event
 async def on_ready():
-    
+    server_on()
     update_exp.start()
 
 @bot.event
