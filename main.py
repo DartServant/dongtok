@@ -4,6 +4,7 @@ import json
 from myserver import server_on
 from discord.ext import commands, tasks
 
+# ตั้งค่าตัวแปรหลัก
 DATA_VERSION = "1.0"
 EXP_RATE = 2.5
 EXP_FILE = "exp_data.json"
@@ -12,6 +13,7 @@ EXP_ROLE_IDS = {10: 1345467425499385886, 20: 1345467017003536384, 30: 1345802923
                 70: 1348598235861880844, 80: 1348598239619711079, 90: 1348598231533355078, 100: 1348598227246645360}
 VC_ROLE_ID = 1348584551261147197
 
+# ตั้งค่า intents
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
@@ -19,34 +21,28 @@ intents.voice_states = True
 
 bot = commands.Bot(command_prefix="d!", intents=intents)
 USER_EXP = {}
+
+# ตัวแปรป้องกันบอทรันซ้ำ
 running_task = False
 
-
-def load_exp_data():
-    global USER_EXP
-    if os.path.exists(EXP_FILE):
-        try:
-            with open(EXP_FILE, "r") as f:
-                data = json.load(f)
-                if data.get("version") == DATA_VERSION:
-                    USER_EXP = data.get("exp_data", {})
-        except json.JSONDecodeError:
-            print("[ERROR] ไฟล์ JSON เสียหาย กำลังสร้างใหม่...")
-            USER_EXP = {}
-            save_exp_data()
-
-def save_exp_data():
-    with open(EXP_FILE, "w") as f:
-        json.dump({"version": DATA_VERSION, "exp_data": USER_EXP}, f, indent=4)
+# โหลดข้อมูล EXP ถ้ามีไฟล์อยู่
+if os.path.exists(EXP_FILE):
+    with open(EXP_FILE, "r") as f:
+        data = json.load(f)
+        if data.get("version") == DATA_VERSION:
+            USER_EXP = data.get("exp_data", {})
 
 @bot.event
 async def on_ready():
     global running_task
+    if running_task:
+        print("⚠️ บอทพยายามรันซ้ำ กำลังปิดตัวเอง...")
+        await bot.close()
+        return
     server_on()
-    if not running_task:
-        update_exp.start()
-        running_task = True
-    
+    update_exp.start()
+    running_task = True
+    print(f"✅ บอทออนไลน์แล้ว: {bot.user}")
 
 @bot.event
 async def on_voice_state_update(member, before, after):
@@ -89,7 +85,10 @@ async def exp(ctx):
     progress = int((exp / next_level_exp) * 10)
     bar = "█" * progress + "-" * (10 - progress)
     percentage = (exp / next_level_exp) * 100
-    await ctx.send(f"{ctx.author.mention} ➡ เลเวล: {level} | EXP: {int(exp)} / {next_level_exp}\n[{bar}] ({percentage:.1f}%)")
+    await ctx.send(f"{ctx.author.mention} ➤ เลเวล: {level} | EXP: {int(exp)} / {next_level_exp}\n[{bar}] ({percentage:.1f}%)")
 
-load_exp_data()
+def save_exp_data():
+    with open(EXP_FILE, "w") as f:
+        json.dump({"version": DATA_VERSION, "exp_data": USER_EXP}, f, indent=4)
+
 bot.run(os.getenv('SYPHON'))
