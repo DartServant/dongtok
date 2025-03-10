@@ -1,6 +1,7 @@
 import os
 import discord
 import json
+import random
 from myserver import server_on
 from discord.ext import commands, tasks
 
@@ -60,25 +61,27 @@ async def check_and_give_role(member, level):
         if level >= lvl and role and role not in member.roles:
             await member.add_roles(role)
           
+
+
 @bot.event
 async def on_message(message):
     if message.author.bot:
-        return  # ไม่ตอบกลับบอทด้วยกันเอง
+        return
+      
+    if "ควย" in message.content.lower():
+        responses = ["ควยไร", "อะไรอะ", "มึงบ้าหรอ", "เสร่อ"]
+        await message.channel.send(random.choice(responses))
+        
+    elif "555" in message.content.lower():
+        responses = ["หัวเราะไรไอหัวเหลี่ยม", "กุเจอเด็กเอ๋อ", "", "🙄🙄"]
+        await message.channel.send(random.choice(responses))
 
-    # 🔥 ตอบกลับตามข้อความที่กำหนด
-    if message.content.lower() == ".อิดอก":
-        await message.channel.send("?")
-    elif message.content.lower() == ".ตื่นยังวะ":
-        await message.channel.send("ตื่นแล้วเย็สแม่!")
-    
-    # เพิ่มข้อความที่อยากให้บอทตอบตามต้องการตรงนี้
-
-    await bot.process_commands(message)  # ทำให้คำสั่งอื่น ๆ ยังใช้ได้
-
+    await bot.process_commands(message)
+  
 
 @bot.command()
 @commands.is_owner()
-async def shutdown(ctx):
+async def pidbot(ctx):
     await ctx.send("🛑 ออฟละ ควย.")
     update_exp.cancel()
     await bot.close()
