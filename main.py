@@ -1,5 +1,6 @@
 import os
 import discord
+from myserver import server_on
 from discord.ext import commands, tasks
 from datetime import datetime, timedelta
 import asyncio
