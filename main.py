@@ -75,7 +75,7 @@ async def check_and_give_role(member, level):
 @bot.command()
 @commands.is_owner()
 async def shutdown(ctx):
-    await ctx.send("🛑 บอทกำลังปิดตัวเอง...")
+    await ctx.send("🛑 Test")
     await bot.close()
 
 @bot.command()
