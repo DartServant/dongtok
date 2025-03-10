@@ -2,6 +2,7 @@ import os
 import discord
 import json
 import random
+import asyncio
 from myserver import server_on
 from discord.ext import commands, tasks
 
@@ -78,14 +79,19 @@ async def on_message(message):
         "ดแม่": ["แม่มึงอ่ะ", "ไอหน้าหี", "ไอหูตุ่น", "ไม่ต้องเสือก", "แม่มึงอะ"],
         "เสือก": ["พ่อมึงอ่ะ", "ไอหน้าหี", "ไอเหลือขอ", "ไม่ต้องเสือก", "ไอลิง"],
         "ดอกทอง": ["แม่มึงสิดอกทอง", "กูถามหรอ", "อย่ามึน", "ไอฮิปโป", "ไอลิง"]
-        "เอ๋อหรอ": ["เสร่อจัด", "กูถามหรอ", "อย่ามึน", "รั่วเลย", "พ่อมึงอ่ะ"]
+        "เอ๋อ": ["เสร่อจัด", "กูถามหรอ", "อย่ามึน", "รั่วเลย", "พ่อมึงอ่ะ"]
         "หี": ["หีเปรี้ยวหีเค็ม?", "แล้วทำไม", "ทำไมอ่ะ", "หน้ามึงอ่ะ", "อย่างหลอน"]
+        "สัส": ["แล้ว", "แล้วทำไม", "โง่", "ซมดง", "หรอๆ"]
     }
 
-    for key, responses in responses_dict.items():
-        if key in message.content.lower():
-            await message.channel.send(random.choice(responses))
-            break  # หยุดการตรวจสอบทันทีที่เจอคำแรก
+    detected_responses = [
+        message.channel.send(random.choice(responses))
+        for key, responses in responses_dict.items()
+        if key in message.content.lower()
+    ]
+
+    if detected_responses:
+        await asyncio.gather(*detected_responses)  # ส่งข้อความทุกคำที่เจอ
 
     await bot.process_commands(message)
   
