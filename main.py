@@ -75,16 +75,15 @@ async def on_message(message):
         "2510": ["2 6 12 มือเปล่ากุให้ 2 มีของกุให้ 4"],
     }
 
-    detected_responses = [
-        message.channel.send(random.choice(responses))
-        for key, responses in responses_dict.items()
-        if key in message.content.lower()
-    ]
+    lower_message = message.content.lower()
 
-    if detected_responses:
-        await asyncio.gather(*detected_responses)  # ส่งข้อความทุกคำที่เจอ
+    for key, responses in responses_dict.items():
+        if key in lower_message:
+            await message.channel.send(random.choice(responses))
+            break  # ✅ ให้ตอบแค่ครั้งเดียว เพื่อป้องกันการส่งข้อความซ้ำซ้อน
 
-    await bot.process_commands(message)
+    await bot.process_commands(message)  # ✅ ให้แน่ใจว่าบอทยังสามารถรันคำสั่งได้
+
 
 @bot.command()
 async def exp(ctx):
