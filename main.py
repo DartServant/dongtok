@@ -14,7 +14,7 @@ intents.voice_states = True
 bot = commands.Bot(command_prefix="d!", intents=intents)
 
 EXP_ROLE_IDS = {
-    4: 1345467425499385886,
+    10: 1345467425499385886,
     20: 1345467017003536384,
     30: 1345802923493298286,
     40: 1348597989760958544,
