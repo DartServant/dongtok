@@ -71,6 +71,8 @@ async def on_message(message):
         "เสือก": ["พ่อมึงอ่ะ", "ไอหน้าหี", "ไอเหลือขอ", "ไม่ต้องเสือก", "ไอลิง"],
         "อมึงอ": ["แม่มึงอะ"],
         "ม่มึงอ": ["พ่อมึงอ่ะ"],
+        "อมึงต": ["พ่อมึงดิ","พ่อมึงอะ"],
+        "ม่มึงต": ["แม่มึงดิ","แม่มึงอะ"],
         "มึง": ["เต็มเปล่า", "แล้ว", "ยังไง", "อ่อ", "55555", "เต็มมั้ยกุถาม", "555"],
         "ดอกทอง": ["แม่มึงสิดอกทอง", "กูถามหรอ", "อย่ามึน", "ไอฮิปโป", "ไอลิง"],
         "เอ๋อ": ["เสร่อจัด", "กูถามหรอ", "อย่ามึน", "รั่วเลย", "พ่อมึงอ่ะ"],
@@ -85,10 +87,16 @@ async def on_message(message):
 
     for key, responses in responses_dict.items():
         if key in lower_message:
-            await message.channel.send(random.choice(responses))
-            break  # ✅ ให้ตอบแค่ครั้งเดียว เพื่อป้องกันการส่งข้อความซ้ำซ้อน
+            response = random.choice(responses)
+            
+            # หน่วงเวลาเล็กน้อยก่อนส่งข้อความอีกครั้ง
+            await message.channel.send(response)
+            await asyncio.sleep(1)  # หน่วงเวลา 1 วินาที
+
+            break  # ✅ ให้ตอบแค่ครั้งเดียวเพื่อป้องกันการส่งข้อความซ้ำซ้อน
 
     await bot.process_commands(message)  # ✅ ให้แน่ใจว่าบอทยังสามารถรันคำสั่งได้
+
 
 @bot.command()
 @commands.is_owner()
