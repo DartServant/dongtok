@@ -4,7 +4,6 @@ import json
 from myserver import server_on
 from discord.ext import commands, tasks
 
-# ตั้งค่าตัวแปรหลัก
 DATA_VERSION = "1.0"
 EXP_RATE = 2.5
 EXP_FILE = "exp_data.json"
@@ -13,7 +12,6 @@ EXP_ROLE_IDS = {10: 1345467425499385886, 20: 1345467017003536384, 30: 1345802923
                 70: 1348598235861880844, 80: 1348598239619711079, 90: 1348598231533355078, 100: 1348598227246645360}
 VC_ROLE_ID = 1348584551261147197
 
-# ตั้งค่า intents
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
@@ -22,10 +20,8 @@ intents.voice_states = True
 bot = commands.Bot(command_prefix="d!", intents=intents)
 USER_EXP = {}
 
-# ตัวแปรป้องกันบอทรันซ้ำ
 running_task = False
 
-# โหลดข้อมูล EXP ถ้ามีไฟล์อยู่
 if os.path.exists(EXP_FILE):
     with open(EXP_FILE, "r") as f:
         data = json.load(f)
@@ -42,7 +38,6 @@ async def on_ready():
     server_on()
     update_exp.start()
     running_task = True
-    print(f"✅ บอทออนไลน์แล้ว: {bot.user}")
 
 @bot.event
 async def on_voice_state_update(member, before, after):
@@ -76,6 +71,12 @@ async def check_and_give_role(member, level):
         role = guild.get_role(role_id)
         if level >= lvl and role and role not in member.roles:
             await member.add_roles(role)
+
+@bot.command()
+@commands.is_owner()
+async def shutdown(ctx):
+    await ctx.send("🛑 บอทกำลังปิดตัวเอง...")
+    await bot.close()
 
 @bot.command()
 async def exp(ctx):
