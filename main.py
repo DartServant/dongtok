@@ -93,14 +93,16 @@ async def on_message(message):
     }
 
     lower_message = message.content.lower()
+    response = None  # เพิ่มตัวแปร response
 
     for key, responses in responses_dict.items():
         if key in lower_message:
             response = random.choice(responses)
+            break  # ให้บอทตอบแค่ข้อความแรกที่เจอ
 
-            break  # ✅ ให้ตอบแค่ครั้งเดียวเพื่อป้องกันการส่งข้อความซ้ำซ้อน
-
-    await bot.process_commands(message)  # ✅ ให้แน่ใจว่าบอทยังสามารถรันคำสั่งได้
+    if response:
+        await message.channel.send(response)  # ให้บอทตอบกลับก่อน
+    await bot.process_commands(message)  # แล้วค่อยรันคำสั่งบอท
 
 
 @bot.command()
