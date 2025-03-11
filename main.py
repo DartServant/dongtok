@@ -155,16 +155,18 @@ async def exp(ctx):
     save_exp_data()
 
     embed = discord.Embed(
-        title=f"🔸 **EXP** ・ {ctx.author.display_name}",
+        title=f"🔸 **EXP Status**",
         color=discord.Color.gold()
     )
-  
+
+    embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar.url)
+
     embed.add_field(name="🔹 Level", value=f"**{level}**", inline=True)
     embed.add_field(name="🔹 Exp", value=f"**{int(exp)} / {next_level_exp}**", inline=True)
-    embed.add_field(name="🔹 Status", value=f"{bar} **({percentage:.1f}%)**", inline=False)
+    embed.add_field(name="🔹 Progress", value=f"{bar} **({percentage:.1f}%)**", inline=False)
 
     await ctx.send(embed=embed)
-
+  
 
 @bot.command()
 async def rank(ctx):
