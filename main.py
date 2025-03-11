@@ -7,10 +7,13 @@ from myserver import server_on
 from discord.ext import commands, tasks
 
 EXP_RATE = 2.5
-EXP_FILE = os.path.join(os.getcwd(), "exp_data.json")
+EXP_FILE = "exp_data.json"
 EXP_ROLE_IDS = {10: 1345467425499385886, 20: 1345467017003536384, 30: 1345802923493298286,
                 40: 1348597989760958544, 50: 1348597995775590450, 60: 1348597982093774869,
                 70: 1348598235861880844, 80: 1348598239619711079, 90: 1348598231533355078, 100: 1348598227246645360}
+
+ADMIN_ROLE_ID = 1114614641709023272  # แก้เป็น ID ของยศแอดมิน
+ANNOUNCE_CHANNEL_ID = 1348165898736767038  # แก้เป็น ID ของห้องแจ้งเตือน
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -25,10 +28,10 @@ if os.path.exists(EXP_FILE):
     try:
         with open(EXP_FILE, "r") as f:
             USER_EXP = json.load(f)
-            if not isinstance(USER_EXP, dict) or not USER_EXP:  
-                USER_EXP = {}  
+            if not isinstance(USER_EXP, dict) or not USER_EXP:
+                USER_EXP = {}
     except (json.JSONDecodeError, ValueError):
-        USER_EXP = {}  
+        USER_EXP = {}
 
 @bot.event
 async def on_ready():
@@ -40,7 +43,7 @@ async def on_ready():
     server_on()
     update_exp.start()
 
-@tasks.loop(seconds=30)  # ⏳ เปลี่ยนจาก 1 นาที เป็น 30 วินาที
+@tasks.loop(seconds=30)
 async def update_exp():
     for guild in bot.guilds:
         for member in guild.members:
@@ -52,17 +55,24 @@ async def update_exp():
                     level += 1
                     exp -= next_level_exp
                     await check_and_give_role(member, level)
+                    channel = guild.get_channel(ANNOUNCE_CHANNEL_ID)
+                    if channel:
+                        embed = discord.Embed(title="🎉 Level Up! 🎉", description=f"{member.mention} อัปเลเวลเป็น **{level}** แล้ว! GG!", color=discord.Color.gold())
+                        await channel.send(embed=embed)
                 USER_EXP[str(member.id)] = (exp, level)
-    
-    save_exp_data()  # ✅ เซฟ EXP ทุก 30 วินาที
-
+    save_exp_data()
 
 async def check_and_give_role(member, level):
     guild = member.guild
+    current_roles = {r.id for r in member.roles}
+    
     for lvl, role_id in EXP_ROLE_IDS.items():
         role = guild.get_role(role_id)
-        if level >= lvl and role and role not in member.roles:
-            await member.add_roles(role)
+        if role:
+            if level >= lvl and role_id not in current_roles:
+                await member.add_roles(role)
+            elif level < lvl and role_id in current_roles:
+                await member.remove_roles(role)
 
 @bot.event
 async def on_message(message):
@@ -117,7 +127,6 @@ async def on_message(message):
     if response:
         await message.channel.send(response)
     await bot.process_commands(message)
-  
 
 @bot.command()
 async def exp(ctx):
@@ -128,21 +137,47 @@ async def exp(ctx):
     bar = "█" * progress + "-" * (10 - progress)
     percentage = (exp / next_level_exp) * 100
     
-    save_exp_data()  # ✅ บันทึก EXP ทุกครั้งที่เรียก d!exp
+    save_exp_data()
     
-    await ctx.send(f"{ctx.author.mention} ➤ เลเวล: {level} | EXP: {int(exp)} / {next_level_exp}\n[{bar}] ({percentage:.1f}%)")
+    embed = discord.Embed(title=f"📊 EXP ของ {ctx.author.display_name}", description=f"**เลเวล:** {level}\n**EXP:** {int(exp)} / {next_level_exp}\n[{bar}] ({percentage:.1f}%)", color=discord.Color.blue())
+    await ctx.send(embed=embed)
 
+@bot.command()
+async def rank(ctx):
+    sorted_users = sorted(USER_EXP.items(), key=lambda x: x[1][1], reverse=True)[:10]
+    embed = discord.Embed(title="🏆 อันดับเลเวลสูงสุด", color=discord.Color.green())
+    
+    for i, (user_id, (exp, level)) in enumerate(sorted_users, start=1):
+        member = ctx.guild.get_member(int(user_id))
+        embed.add_field(name=f"#{i} {member.display_name if member else 'Unknown'}", value=f"เลเวล {level}", inline=False)
+    
+    await ctx.send(embed=embed)
 
-last_exp_data = None  # ใช้เก็บข้อมูล EXP ล่าสุด
+@bot.command()
+@commands.has_role(ADMIN_ROLE_ID)
+async def lev(ctx, member: discord.Member, level: int):
+    if level < 1 or level > 100:
+        await ctx.send("🛑 มีแค่ 1-100 ไอควาย.")
+        return
+    
+    USER_EXP[str(member.id)] = (0, level)
+    await check_and_give_role(member, level)
+    save_exp_data()
+    
+    embed = discord.Embed(title="✅ ปรับเลเวลสำเร็จ!", description=f"{member.mention} ถูกปรับเลเวลเป็น **{level}** แล้ว!", color=discord.Color.purple())
+    await ctx.send(embed=embed)
+
+last_exp_data = None
+
 def save_exp_data():
     global last_exp_data
-    if USER_EXP != last_exp_data:  # ตรวจสอบว่า USER_EXP มีการเปลี่ยนแปลง
+    if USER_EXP != last_exp_data:
         with open(EXP_FILE, "w") as f:
             json.dump(USER_EXP, f, indent=4)
-        last_exp_data = USER_EXP.copy()  # อัปเดตข้อมูล EXP ล่าสุด
+        last_exp_data = USER_EXP.copy()
 
 @bot.event
 async def on_disconnect():
-    save_exp_data()  # บันทึก EXP ก่อนปิดบอท
+    save_exp_data()
 
 bot.run(os.getenv('SYPHON'))
