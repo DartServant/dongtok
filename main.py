@@ -156,9 +156,10 @@ async def exp(ctx):
 
     embed = discord.Embed(
         title=f"🔸 **EXP** ・ {ctx.author.display_name}",
+        description=f"{member.mention}",
         color=discord.Color.gold()
     )
-    embed.description=f"{member.mention}",
+  
     embed.add_field(name="🔹 Level", value=f"**{level}**", inline=True)
     embed.add_field(name="🔹 Exp", value=f"**{int(exp)} / {next_level_exp}**", inline=True)
     embed.add_field(name="🔹 Status", value=f"{bar} **({percentage:.1f}%)**", inline=False)
