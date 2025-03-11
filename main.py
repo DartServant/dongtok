@@ -62,7 +62,7 @@ async def update_exp():
                     channel = guild.get_channel(ANNOUNCE_CHANNEL_ID)
 
                     if channel:
-                        message = (f"🎀˖°.🎉 **Level Up!** 🎉⋆.˚⤷ {member.mention} level Up to **{level}** 🎀")
+                        message = (f"🎀˖°.🎉 **Level Up!** 🎉⋆.˚⤷ {member.mention} level up to **{level}** 🎀")
 
                         await channel.send(message)
 
