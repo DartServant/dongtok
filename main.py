@@ -62,18 +62,9 @@ async def update_exp():
                     channel = guild.get_channel(ANNOUNCE_CHANNEL_ID)
 
                     if channel:
-                        embed = discord.Embed(
-                            title="🎉 **Level Up!** 🎉", 
-                            description=f"{member.mention} Level up to **{level}** !", 
-                            color=discord.Color(0x000000))
-                         
-                        embed.add_field(name="🔸 New Level", value=f"**{level}**", inline=False)
-                        embed.set_footer(
-                            text="Congratulations on leveling up!",
-                            icon_url=member.avatar_url
-                        )
+                        message = (f"✧˖°.🎉 **Level Up!** 🎉⋆.˚⤷ {member.mention} level Up to **{level}**")
 
-                        await channel.send(embed=embed)
+                        await channel.send(message)
 
                 # อัปเดตข้อมูล EXP และเลเวลใหม่
                 USER_EXP[str(member.id)] = (exp, level)
@@ -151,25 +142,19 @@ async def exp(ctx):
     exp, level = USER_EXP.get(user_id, (0, 1))
     next_level_exp = (level ** 2) * 50
     progress = int((exp / next_level_exp) * 10)
-    bar = "|" * progress + "-" * (10 - progress)  
+    bar = "█" * progress + "-" * (10 - progress)  
     percentage = (exp / next_level_exp) * 100
 
     save_exp_data()
 
-    # สร้าง embed message
-    embed = discord.Embed(
-      
-        description=f"{ctx.author.mention}",
-        color=discord.Color.blue()
+    # สร้างข้อความ
+    message = (
+        f"{ctx.author.mention} ➤ Level: {level} | EXP: {int(exp)} / {next_level_exp}\n"
+        f"[{bar}] ({percentage:.1f}%)"
     )
-    embed.add_field(name="🔹 **Level**", value=str(level), inline=False)
-    embed.add_field(name="🔹 **Exp**", value=f"{int(exp)} / {next_level_exp}", inline=False)
-    embed.add_field(name="🔹 **Progress**", value=f"{bar} ({percentage:.1f}%)", inline=False)
 
-    # ส่ง Embed Message
-    await ctx.send(embed=embed)
-
-
+    # ส่งข้อความ
+    await ctx.send(message)
 
 @bot.command()
 async def rank(ctx):
@@ -202,17 +187,12 @@ async def lev(ctx, member: discord.Member, level: int):
     USER_EXP[str(member.id)] = (0, level)
     await check_and_give_role(member, level)
     save_exp_data()
-    
-    embed = discord.Embed(
-        title="✅ **ปรับให้แล้ว!**",
-        description=f"{member.mention} **has been leveled to {level}** successfully!",
-        color=discord.Color(0x000000)
-    )
-    embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar.url)
-    embed.add_field(name="🔹 User", value=f"**{member.display_name}**", inline=False)
-    embed.add_field(name="🔸 New Level", value=f"**{level}**", inline=False)
 
-    await ctx.send(embed=embed)
+    # สร้างข้อความ
+    message = (f"✅╰›{member.mention}→{member.display_name} ➤ {level} !")
+
+    # ส่งข้อความ
+    await ctx.send(message)
 
 last_exp_data = None
 
