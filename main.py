@@ -7,7 +7,7 @@ from myserver import server_on
 from discord.ext import commands, tasks
 
 EXP_RATE = 2.5
-EXP_FILE = "exp_data.json"
+EXP_FILE = os.path.join(os.getcwd(), "exp_data.json")
 EXP_ROLE_IDS = {10: 1345467425499385886, 20: 1345467017003536384, 30: 1345802923493298286,
                 40: 1348597989760958544, 50: 1348597995775590450, 60: 1348597982093774869,
                 70: 1348598235861880844, 80: 1348598239619711079, 90: 1348598231533355078, 100: 1348598227246645360}
@@ -101,7 +101,9 @@ async def on_message(message):
         "โง่": ["ควยไร", "อะไรอะ", "หลอน", "เสร่อ", "เสือก", "มึงบ้าป้ะ", "ไปนอนนะ"],
         "หลอน": ["เต็มเปล่า", "ไปนอนนะ", "ไร", "เสร่อ", "เสือก", "มึงบ้าอ่อ"],
         "ไร": ["มุนซึง", "ไอควาย", "แล้วควยไร", "ไม่ต้องเสือกเนาะ", "ไอปากแหว่ง"],
+        "ไม": ["มินจง", "ไอควาย", "แล้วควยไล", "ไม่ต้องเสือกก", "ไอฟันเหยิน"],
         "ด่า": ["หรอไอเหี้ย", "ไอหมูเป๋", "ไอพิการ", "รั่วจัด", "ไอตาโบ๋","จะสื่อไร","อย่างโง่"],
+        "เงียบ": ["มึงเหงาหรอไอเหี้ย", "ควยไร", "หุบปาก", "แล้ว", "ยุ่ง","เสือก","นอนเถอะ"],
     }
 
     lower_message = message.content.lower()
@@ -131,9 +133,13 @@ async def exp(ctx):
     await ctx.send(f"{ctx.author.mention} ➤ เลเวล: {level} | EXP: {int(exp)} / {next_level_exp}\n[{bar}] ({percentage:.1f}%)")
 
 
+last_exp_data = None  # ใช้เก็บข้อมูล EXP ล่าสุด
 def save_exp_data():
-    with open(EXP_FILE, "w") as f:
-        json.dump(USER_EXP, f, indent=4)
+    global last_exp_data
+    if USER_EXP != last_exp_data:  # ตรวจสอบว่า USER_EXP มีการเปลี่ยนแปลง
+        with open(EXP_FILE, "w") as f:
+            json.dump(USER_EXP, f, indent=4)
+        last_exp_data = USER_EXP.copy()  # อัปเดตข้อมูล EXP ล่าสุด
 
 @bot.event
 async def on_disconnect():
