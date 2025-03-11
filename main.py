@@ -71,7 +71,7 @@ async def update_exp():
                         embed.add_field(name="🔸 New Level", value=f"**{level}**", inline=True)
                         embed.set_footer(text="Congratulations on leveling up!")
 
-                        await channel.send(f"{member.mention}", embed=embed)
+                        await channel.send(embed=embed)
 
                 # อัปเดตข้อมูล EXP และเลเวลใหม่
                 USER_EXP[str(member.id)] = (exp, level)
@@ -158,12 +158,12 @@ async def exp(ctx):
         title=f"🔸 **EXP** ・ {ctx.author.display_name}",
         color=discord.Color.gold()
     )
-    
+    embed.description=f"{member.mention}",
     embed.add_field(name="🔹 Level", value=f"**{level}**", inline=True)
     embed.add_field(name="🔹 Exp", value=f"**{int(exp)} / {next_level_exp}**", inline=True)
     embed.add_field(name="🔹 Status", value=f"{bar} **({percentage:.1f}%)**", inline=False)
 
-    await ctx.send(f"{member.mention}", embed=embed)
+    await ctx.send(embed=embed)
 
 
 @bot.command()
@@ -206,7 +206,7 @@ async def lev(ctx, member: discord.Member, level: int):
     embed.add_field(name="🔹 User", value=f"**{member.display_name}**", inline=False)
     embed.add_field(name="🔸 New Level", value=f"**{level}**", inline=False)
 
-    await ctx.send(f"{member.mention}", embed=embed)
+    await ctx.send(embed=embed)
 
 last_exp_data = None
 
