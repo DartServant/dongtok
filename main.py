@@ -156,15 +156,21 @@ async def exp(ctx):
 
     save_exp_data()
 
-    message = (
-        f"👤 {ctx.author.mention}"
-        f"🔸 **Status**\n"
-        f"🔹 **Level:** {level}\n"
-        f"🔹 **Exp:** {int(exp)} / {next_level_exp}\n"
-        f"🔹 **Progress:** {bar} ({percentage:.1f}%)"
+    # สร้าง embed message
+    embed = discord.Embed(
+      
+        description=f"{ctx.author.mention}",
+        color=discord.Color.blue()
     )
+    embed.set_author(name=str(ctx.author), icon_url=ctx.author.avatar_url)  # ตั้งชื่อและไอคอนของผู้ใช้
+    embed.add_field(name="🔹 **Level**", value=str(level), inline=False)
+    embed.add_field(name="🔹 **Exp**", value=f"{int(exp)} / {next_level_exp}", inline=False)
+    embed.add_field(name="🔹 **Progress**", value=f"{bar} ({percentage:.1f}%)", inline=False)
 
-    await ctx.send(message)
+    # ส่ง Embed Message
+    await ctx.send(embed=embed)
+
+
 
 @bot.command()
 async def rank(ctx):
