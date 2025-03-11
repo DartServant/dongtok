@@ -6,7 +6,7 @@ import random
 from myserver import server_on
 from discord.ext import commands, tasks
 
-EXP_RATE = 2.5
+EXP_RATE = 30
 EXP_FILE = "exp_data.json"
 EXP_ROLE_IDS = {10: 1345467425499385886, 20: 1345467017003536384, 30: 1345802923493298286,
                 40: 1348597989760958544, 50: 1348597995775590450, 60: 1348597982093774869,
