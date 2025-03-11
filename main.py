@@ -155,14 +155,13 @@ async def exp(ctx):
     save_exp_data()
 
     embed = discord.Embed(
-        title=f"🔸 **EXP Status**",
+        title=f"🔸 **Status**",
         color=discord.Color.gold()
     )
 
     embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar.url)
-
-    embed.add_field(name="🔹 Level", value=f"**{level}**", inline=True)
-    embed.add_field(name="🔹 Exp", value=f"**{int(exp)} / {next_level_exp}**", inline=True)
+    embed.add_field(name="🔹 Level", value=f"**{level}**", inline=False)
+    embed.add_field(name="🔹 Exp", value=f"**{int(exp)} / {next_level_exp}**", inline=False)
     embed.add_field(name="🔹 Progress", value=f"{bar} **({percentage:.1f}%)**", inline=False)
 
     await ctx.send(embed=embed)
@@ -171,7 +170,9 @@ async def exp(ctx):
 @bot.command()
 async def rank(ctx):
     sorted_users = sorted(USER_EXP.items(), key=lambda x: x[1][1], reverse=True)[:10]
-    embed = discord.Embed(title="🏆 **Online Rank VC**", color=discord.Color.gold())
+    embed = discord.Embed(title="🏆 **Online Rank VC**", color=discord.Color(0x000000))
+
+    embed.set_image(url="https://imgur.com/a/NhT5lPT")
 
     medals = ["🥇", "🥈", "🥉"]  # เหรียญสำหรับ 3 อันดับแรก
     rank_list = []
@@ -181,10 +182,11 @@ async def rank(ctx):
         display_name = f"**{member.display_name}**" if member else "**Unknown**"
         medal = medals[i-1] if i <= 3 else "🏅"  # Top 3 ใช้เหรียญพิเศษ อื่นๆ ใช้ 🏅
         
-        rank_list.append(f"| {medal} ที่ {i} | {display_name} |\n| ・ 𝗟𝗲𝘃𝗲𝗹 {level} |\n━━━━━━━━━━━━━━")
+        rank_list.append(f"| {medal} ที่ {i} | {display_name} |\n| ・ Level {level} |\n━━━━━━━━━━━━━━")
 
     embed.description = "\n".join(rank_list)  # ใช้เส้นคั่นให้ดูเป็นระเบียบ
     await ctx.send(embed=embed)
+
 
 
 @bot.command()
@@ -204,7 +206,7 @@ async def lev(ctx, member: discord.Member, level: int):
         description=f"{member.mention} **has been leveled to {level}** successfully!",
         color=discord.Color(0x000000)
     )
-    
+    embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar.url)
     embed.add_field(name="🔹 User", value=f"**{member.display_name}**", inline=False)
     embed.add_field(name="🔸 New Level", value=f"**{level}**", inline=False)
 
