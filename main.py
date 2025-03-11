@@ -64,11 +64,11 @@ async def update_exp():
                     if channel:
                         embed = discord.Embed(
                             title="🎉 **Level Up!** 🎉", 
-                            description=f"{member.mention} **Level up to {level}** !", 
-                            color=discord.Color.gold()
+                            description=f"{member.mention} Level up to **{level}** !", 
+                            color=discord.Color(0x000000))
                         )
                          
-                        embed.add_field(name="🔸 New Level", value=f"**{level}**", inline=True)
+                        embed.add_field(name="🔸 New Level", value=f"**{level}**", inline=False)
                         embed.set_footer(text="Congratulations on leveling up!")
 
                         await channel.send(embed=embed)
@@ -155,8 +155,8 @@ async def exp(ctx):
     save_exp_data()
 
     embed = discord.Embed(
-        title=f"🔸 **Status**",
-        color=discord.Color.gold()
+        title=f"🔸 Status",
+        color=discord.Color(0x000000))
     )
 
     embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar.url)
@@ -172,15 +172,13 @@ async def rank(ctx):
     sorted_users = sorted(USER_EXP.items(), key=lambda x: x[1][1], reverse=True)[:10]
     embed = discord.Embed(title="🏆 **Online Rank VC**", color=discord.Color(0x000000))
 
-    embed.set_image(url="https://imgur.com/a/NhT5lPT")
-
     medals = ["🥇", "🥈", "🥉"]  # เหรียญสำหรับ 3 อันดับแรก
     rank_list = []
     
     for i, (user_id, (exp, level)) in enumerate(sorted_users, start=1):
         member = ctx.guild.get_member(int(user_id))
         display_name = f"**{member.display_name}**" if member else "**Unknown**"
-        medal = medals[i-1] if i <= 3 else "🏅"  # Top 3 ใช้เหรียญพิเศษ อื่นๆ ใช้ 🏅
+        medal = medals[i-1] if i <= 3 else "・"
         
         rank_list.append(f"| {medal} ที่ {i} | {display_name} |\n| ・ Level {level} |\n━━━━━━━━━━━━━━")
 
