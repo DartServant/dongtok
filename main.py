@@ -1,5 +1,6 @@
 import os
 import discord
+from myserver import server_on
 from discord.ext import commands, tasks
 from message_handler import on_message
 from exp_system import load_exp_data, save_exp_data, update_user_exp, check_and_give_role, get_user_exp
@@ -16,7 +17,7 @@ load_exp_data()
 
 @bot.event
 async def on_ready():
-    print(f'Logged in as {bot.user}')
+    server_on()
     update_exp.start()  # เริ่มต้นการทำงานของ update_exp
 
 @tasks.loop(seconds=30)  # ⏳ เปลี่ยนจาก 1 นาที เป็น 30 วินาที
