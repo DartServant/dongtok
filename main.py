@@ -162,7 +162,6 @@ async def exp(ctx):
         description=f"{ctx.author.mention}",
         color=discord.Color.blue()
     )
-    embed.set_author(name=str(ctx.author), icon_url=ctx.author.avatar_url)  # ตั้งชื่อและไอคอนของผู้ใช้
     embed.add_field(name="🔹 **Level**", value=str(level), inline=False)
     embed.add_field(name="🔹 **Exp**", value=f"{int(exp)} / {next_level_exp}", inline=False)
     embed.add_field(name="🔹 **Progress**", value=f"{bar} ({percentage:.1f}%)", inline=False)
