@@ -189,7 +189,7 @@ async def lev(ctx, member: discord.Member, level: int):
     save_exp_data()
 
     # สร้างข้อความ
-    message = (f"✅╰›{member.mention}→{member.display_name} ➤ {level} !")
+    message = (f"☑ ›{member.mention} → The level has been adjusted to → **{level}** !")
 
     # ส่งข้อความ
     await ctx.send(message)
