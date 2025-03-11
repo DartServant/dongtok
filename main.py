@@ -64,14 +64,14 @@ async def update_exp():
                     if channel:
                         embed = discord.Embed(
                             title="🎉 **Level Up!** 🎉", 
-                            description=f"{member.mention} **𝗟𝗲𝘃𝗲𝗹 𝘂𝗽 𝘁𝗼 {level}** !", 
+                            description=f"{member.mention} **Level up to {level}** !", 
                             color=discord.Color.gold()
                         )
-                        embed.set_thumbnail(url=member.avatar.url)  
+                         
                         embed.add_field(name="🔸 New Level", value=f"**{level}**", inline=True)
                         embed.set_footer(text="Congratulations on leveling up!")
 
-                        await channel.send(embed=embed)
+                        await channel.send(f"{member.mention}", embed=embed)
 
                 # อัปเดตข้อมูล EXP และเลเวลใหม่
                 USER_EXP[str(member.id)] = (exp, level)
@@ -149,21 +149,21 @@ async def exp(ctx):
     exp, level = USER_EXP.get(user_id, (0, 1))
     next_level_exp = (level ** 2) * 50
     progress = int((exp / next_level_exp) * 10)
-    bar = "█" * progress + "-" * (10 - progress)  # ใช้สีเขียวแทนความคืบหน้า
+    bar = "|" * progress + "-" * (10 - progress)  
     percentage = (exp / next_level_exp) * 100
 
     save_exp_data()
 
     embed = discord.Embed(
-        title=f"🔸 **EXP** | {ctx.author.display_name}",
+        title=f"🔸 **EXP** ・ {ctx.author.display_name}",
         color=discord.Color.gold()
     )
-    embed.set_thumbnail(url=ctx.author.avatar.url if ctx.author.avatar else ctx.author.default_avatar.url)  # ใส่รูปโปรไฟล์
+    
     embed.add_field(name="🔹 Level", value=f"**{level}**", inline=True)
     embed.add_field(name="🔹 Exp", value=f"**{int(exp)} / {next_level_exp}**", inline=True)
     embed.add_field(name="🔹 Status", value=f"{bar} **({percentage:.1f}%)**", inline=False)
 
-    await ctx.send(embed=embed)
+    await ctx.send(f"{member.mention}", embed=embed)
 
 
 @bot.command()
@@ -179,7 +179,7 @@ async def rank(ctx):
         display_name = f"**{member.display_name}**" if member else "**Unknown**"
         medal = medals[i-1] if i <= 3 else "🏅"  # Top 3 ใช้เหรียญพิเศษ อื่นๆ ใช้ 🏅
         
-        rank_list.append(f"| {medal} ที่ {i} | {display_name} |\n| - 𝗟𝗲𝘃𝗲𝗹 {level} |\n━━━━━━━━━━━━━━")
+        rank_list.append(f"| {medal} ที่ {i} | {display_name} |\n| ・ 𝗟𝗲𝘃𝗲𝗹 {level} |\n━━━━━━━━━━━━━━")
 
     embed.description = "\n".join(rank_list)  # ใช้เส้นคั่นให้ดูเป็นระเบียบ
     await ctx.send(embed=embed)
@@ -202,11 +202,11 @@ async def lev(ctx, member: discord.Member, level: int):
         description=f"{member.mention} **has been leveled to {level}** successfully!",
         color=discord.Color(0x000000)
     )
-    embed.set_thumbnail(url=member.avatar.url)  # เพิ่มรูปโปรไฟล์ของสมาชิก
+    
     embed.add_field(name="🔹 User", value=f"**{member.display_name}**", inline=False)
     embed.add_field(name="🔸 New Level", value=f"**{level}**", inline=False)
 
-    await ctx.send(embed=embed)
+    await ctx.send(f"{member.mention}", embed=embed)
 
 last_exp_data = None
 
