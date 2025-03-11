@@ -156,7 +156,6 @@ async def exp(ctx):
 
     embed = discord.Embed(
         title=f"🔸 **EXP** ・ {ctx.author.display_name}",
-        description=f"{member.mention}",
         color=discord.Color.gold()
     )
   
