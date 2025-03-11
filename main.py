@@ -66,7 +66,6 @@ async def update_exp():
                             title="🎉 **Level Up!** 🎉", 
                             description=f"{member.mention} Level up to **{level}** !", 
                             color=discord.Color(0x000000))
-                        )
                          
                         embed.add_field(name="🔸 New Level", value=f"**{level}**", inline=False)
                         embed.set_footer(
