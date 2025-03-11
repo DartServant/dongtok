@@ -69,7 +69,10 @@ async def update_exp():
                         )
                          
                         embed.add_field(name="🔸 New Level", value=f"**{level}**", inline=False)
-                        embed.set_footer(text="Congratulations on leveling up!")
+                        embed.set_footer(
+                            text="Congratulations on leveling up!",
+                            icon_url=member.avatar_url
+                        )
 
                         await channel.send(embed=embed)
 
@@ -154,18 +157,15 @@ async def exp(ctx):
 
     save_exp_data()
 
-    embed = discord.Embed(
-        title=f"🔸 Status",
-        color=discord.Color(0x000000))
+    message = (
+        f"👤 {ctx.author.mention}"
+        f"🔸 **Status**\n"
+        f"🔹 **Level:** {level}\n"
+        f"🔹 **Exp:** {int(exp)} / {next_level_exp}\n"
+        f"🔹 **Progress:** {bar} ({percentage:.1f}%)"
     )
 
-    embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.avatar.url)
-    embed.add_field(name="🔹 Level", value=f"**{level}**", inline=False)
-    embed.add_field(name="🔹 Exp", value=f"**{int(exp)} / {next_level_exp}**", inline=False)
-    embed.add_field(name="🔹 Progress", value=f"{bar} **({percentage:.1f}%)**", inline=False)
-
-    await ctx.send(embed=embed)
-  
+    await ctx.send(message)
 
 @bot.command()
 async def rank(ctx):
