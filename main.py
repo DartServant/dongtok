@@ -51,28 +51,31 @@ async def update_exp():
                 exp, level = USER_EXP.get(str(member.id), (0, 1))
                 exp += EXP_RATE
                 next_level_exp = (level ** 2) * 50
+
                 if exp >= next_level_exp and level < 100:
                     level += 1
                     exp -= next_level_exp
-                   await check_and_give_role(member, level)
+                    await check_and_give_role(member, level)
 
-# ประกาศในช่องสำหรับ Level Up
-guild = ctx.guild
-channel = guild.get_channel(ANNOUNCE_CHANNEL_ID)
-if channel:
-    embed = discord.Embed(
-        title="🎉 **𝗟𝗲𝘃𝗲𝗹 𝗨𝗽!** 🎉", 
-        description=f"{member.mention} **𝗟𝗲𝘃𝗲𝗹 𝘂𝗽 𝘁𝗼 {level}** !", 
-        color=discord.Color.gold()
-    )
-    embed.set_thumbnail(url=member.avatar.url)  # ใส่รูปโปรไฟล์
-    embed.add_field(name="🔸 𝗡𝗲𝘄 𝗟𝗲𝘃𝗲𝗹", value=f"**{level}**", inline=True)
-    embed.set_footer(text="𝗖𝗼𝗻𝗴𝗿𝗮𝘁𝘂𝗹𝗮𝘁𝗶𝗼𝗻𝘀 𝗼𝗻 𝗹𝗲𝘃𝗲𝗹𝗶𝗻𝗴 𝘂𝗽!")  # ใส่ข้อความฟุตเตอร์
-    await channel.send(embed=embed)
+                    # ประกาศในช่องสำหรับ Level Up
+                    guild = member.guild
+                    channel = guild.get_channel(ANNOUNCE_CHANNEL_ID)
 
-# อัปเดตข้อมูล EXP และเลเวลใหม่
-USER_EXP[str(member.id)] = (exp, level)
-save_exp_data()
+                    if channel:
+                        embed = discord.Embed(
+                            title="🎉 **𝗟𝗲𝘃𝗲𝗹 𝗨𝗽!** 🎉", 
+                            description=f"{member.mention} **𝗟𝗲𝘃𝗲𝗹 𝘂𝗽 𝘁𝗼 {level}** !", 
+                            color=discord.Color.gold()
+                        )
+                        embed.set_thumbnail(url=member.avatar.url)  
+                        embed.add_field(name="🔸 𝗡𝗲𝘄 𝗟𝗲𝘃𝗲𝗹", value=f"**{level}**", inline=True)
+                        embed.set_footer(text="𝗖𝗼𝗻𝗴𝗿𝗮𝘁𝘂𝗹𝗮𝘁𝗶𝗼𝗻𝘀 𝗼𝗻 𝗹𝗲𝘃𝗲𝗹𝗶𝗻𝗴 𝘂𝗽!") 
+
+                        await channel.send(embed=embed)
+
+                # อัปเดตข้อมูล EXP และเลเวลใหม่
+                USER_EXP[str(member.id)] = (exp, level)
+                save_exp_data()
 
 async def check_and_give_role(member, level):
     guild = member.guild
