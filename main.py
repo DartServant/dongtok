@@ -8,10 +8,6 @@ from oauth2client.service_account import ServiceAccountCredentials
 from myserver import server_on
 from discord.ext import commands, tasks
 
-with open('credentials.json') as f:
-    google_creds = json.load(f)
-creds_type = google_creds.get('type')
-
 google_creds = (os.getenv("GOOGLE_CREDENTIALS"))
 
 EXP_RATE = 2.5
