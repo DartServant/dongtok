@@ -25,8 +25,8 @@ bot = commands.Bot(command_prefix="d!", intents=intents)
 scope = ["https://docs.google.com/spreadsheets/d/1Ea_nIYkxs4HOyEfkqXTVz-QaKu5SPBVOUd1Nnp6QMPo/edit?usp=sharing", "https://www.googleapis.com/oauth2/v1/certs"]
 creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
 client = gspread.authorize(creds)
-SHEET_NAME = "RomanDiscord"
-sheet = client.open(SHEET_NAME).sheet1
+
+sheet = client.open_by_key(os.getenv("SHEET_ID")).sheet1
 
 def load_exp_data():
     data = sheet.get_all_values()
