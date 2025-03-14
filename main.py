@@ -235,7 +235,7 @@ async def lev(ctx, member: discord.Member, level: int, exp: int = 0):
     USER_EXP[str(member.id)] = (exp, level)
     save_exp_data()
   
-    await ctx.send(f"☑ › {member.mention} → ระดับถูกปรับเป็น **{level}** และ EXP เป็น **{exp}** !")
+    await ctx.send(f"<:kitty2:1346531578502713364> › {member.mention} → ระดับถูกปรับเป็น **{level}** และ EXP เป็น **{exp}** !")
 
 ####################################################
 
