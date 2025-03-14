@@ -183,8 +183,8 @@ async def exp(ctx):
 @bot.command()
 async def rank(ctx):
     sorted_users = sorted(USER_EXP.items(), key=lambda x: (x[1][1], x[1][0]), reverse=True)[:10]
-    embed = discord.Embed(title="<a:ot6:1350100419816456252> **Online Rank VC**", color=discord.Color(0x000000))
-    medals = ["<a:ot3:1350099635229691966>", "<a:ot4:1350104551247577160>", "<a:ot5:1350104555378966528>"]
+    embed = discord.Embed(title="🏆 **Online Rank VC**", color=discord.Color(0x000000))
+    medals = ["🥇", "🥈", "🥉"]
     rank_list = []
     
     for i, (user_id, (exp, level)) in enumerate(sorted_users, start=1):
