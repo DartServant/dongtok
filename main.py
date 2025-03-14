@@ -62,7 +62,7 @@ async def update_exp():
                     channel = guild.get_channel(ANNOUNCE_CHANNEL_ID)
 
                     if channel:
-                        message = (f"**Level Up!** <a:ot8:1350101721359061183>{member.mention} level up to <a:kitty00:1346537172315934751>**{level}**<a:kitty00:1346537172315934751>!\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                        message = (f"**Level Up!** <a:ot8:1350101721359061183>{member.mention} level up to <a:kitty00:1346537172315934751>**{level}**<a:kitty00:1346537172315934751>🎀\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
                         await channel.send(message)
 
@@ -227,7 +227,7 @@ async def lev(ctx, member: discord.Member, level: int, exp: int = 0):
         channel = guild.get_channel(ANNOUNCE_CHANNEL_ID)
 
         if channel:
-            message = (f"**Level Up!** <a:ot8:1350101721359061183>{member.mention} level up to <a:kitty00:1346537172315934751>**{level}**<a:kitty00:1346537172315934751>!\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+            message = (f"**Level Up!** <a:ot8:1350101721359061183>{member.mention} level up to <a:kitty00:1346537172315934751>**{level}**<a:kitty00:1346537172315934751>🎀\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
             await channel.send(message)
 
     # บันทึกข้อมูล
