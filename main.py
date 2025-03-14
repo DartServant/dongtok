@@ -171,7 +171,7 @@ async def exp(ctx):
     percentage = (exp / next_level_exp) * 100
 
     message = (
-        f"<a:Colette_Cryezgif:1345493055951732868> {ctx.author.mention} <a:ot2:1350097632277565490> Level: {level} | EXP: {int(exp)} / {next_level_exp}\n"
+        f"<a:Colette_Cryezgif:1345493055951732868> {ctx.author.mention} <a:ot2:1350097632277565490> Level: <a:kitty00:1346537172315934751>{level}<a:kitty00:1346537172315934751> | EXP: {int(exp)} / {next_level_exp}\n"
         f"[{bar}] ({percentage:.1f}%) <a:TinyButterfly:1345130554168840314>"
     )
 
