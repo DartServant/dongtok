@@ -7,6 +7,8 @@ from oauth2client.service_account import ServiceAccountCredentials
 from myserver import server_on
 from discord.ext import commands, tasks
 
+google_creds = (os.getenv("GOOGLE_CREDENTIALS"))
+
 EXP_RATE = 2.5
 EXP_ROLE_IDS = {10: 1345467425499385886, 20: 1345467017003536384, 30: 1345802923493298286,
                 40: 1348597989760958544, 50: 1348597995775590450, 60: 1348597982093774869,
@@ -23,7 +25,7 @@ intents.voice_states = True
 bot = commands.Bot(command_prefix="d!", intents=intents)
 
 scope = ["https://docs.google.com/spreadsheets/d/1Ea_nIYkxs4HOyEfkqXTVz-QaKu5SPBVOUd1Nnp6QMPo/edit?usp=sharing", "https://www.googleapis.com/robot/v1/metadata/x509/romandiscord%40romandiscord.iam.gserviceaccount.com"]
-creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
+creds = ServiceAccountCredentials.from_json_keyfile_dict(google_creds, scope)
 client = gspread.authorize(creds)
 
 sheet = client.open_by_key(os.getenv("SHEET_ID")).sheet1
