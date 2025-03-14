@@ -191,7 +191,7 @@ async def rank(ctx):
         member = ctx.guild.get_member(int(user_id))
         display_name = f"**{member.display_name}**" if member else "**Unknown**"
         medal = medals[i-1] if i <= 3 else "・"
-        rank_list.append(f"| {medal} ที่ {i} | {display_name} |\n| ・ Level {level} (EXP: {exp}) |\n━━━━━━━━━━━━━━")
+        rank_list.append(f"| {medal} ที่ {i} | {display_name} |\n| <a:ot2:1350097632277565490> Level {level} (EXP: {exp}) |\n━━━━━━━━━━━━━━")
 
     embed.description = "\n".join(rank_list)
     await ctx.send(embed=embed)
