@@ -115,7 +115,7 @@ async def on_message(message):
 @commands.has_role(ADMIN_ROLE_ID)
 async def add_role(ctx, role_check: discord.Role, role_add: discord.Role):
     if not ctx.author.guild_permissions.administrator:
-        await ctx.send("อะไรมึงอ่ะ จะทำไร")
+        await ctx.send("อะไรมึงอะ จะทำไร")
         return
 
     count = 0
