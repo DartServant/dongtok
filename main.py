@@ -62,7 +62,7 @@ async def update_exp():
                     channel = guild.get_channel(ANNOUNCE_CHANNEL_ID)
 
                     if channel:
-                        message = (f"**Level Up!** 🎉⋆.˚⤷ {member.mention} level up to **{level}** 🎀\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                        message = (f"**Level Up!** <a:ot8:1350101721359061183>⋆.˚⤷ {member.mention} level up to <a:ot2:1350097632277565490> **{level}** <a:ot9:1350102207906709627>\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
                         await channel.send(message)
 
@@ -115,7 +115,7 @@ async def on_message(message):
 @commands.has_role(ADMIN_ROLE_ID)
 async def add_role(ctx, role_check: discord.Role, role_add: discord.Role):
     if not ctx.author.guild_permissions.administrator:
-        await ctx.send("อะไรมึงอะ จะทำไร")
+        await ctx.send("<a:ot7:1350101072336654346> อะไรมึงอะ จะทำไร")
         return
 
     count = 0
@@ -124,14 +124,14 @@ async def add_role(ctx, role_check: discord.Role, role_add: discord.Role):
             await member.add_roles(role_add)
             count += 1
 
-    await ctx.send(f"✅ เพิ่มบทบาท {role_add.mention} ให้กับ {count} คนที่มีบทบาท {role_check.mention} แล้ว!")
+    await ctx.send(f"<a:ot1:1350094128649736212> เพิ่มบทบาท {role_add.mention} ให้กับ {count} คนที่มีบทบาท {role_check.mention} แล้ว!")
 
 
 @bot.command()
 @commands.has_role(ADMIN_ROLE_ID)
 async def del_role(ctx, role_check: discord.Role, role_remove: discord.Role):
     if not ctx.author.guild_permissions.administrator:
-        await ctx.send("อะไรอะ")
+        await ctx.send("<a:ot7:1350101072336654346> อะไรอะ")
         return
 
     count = 0
@@ -140,14 +140,14 @@ async def del_role(ctx, role_check: discord.Role, role_remove: discord.Role):
             await member.remove_roles(role_remove)
             count += 1
 
-    await ctx.send(f"✅ ลบบทบาท {role_remove.mention} ออกจาก {count} คนที่มีบทบาท {role_check.mention} แล้ว!")
+    await ctx.send(f"<a:ot1:1350094128649736212> ลบบทบาท {role_remove.mention} ออกจาก {count} คนที่มีบทบาท {role_check.mention} แล้ว!")
 
 
 @bot.command()
 @commands.has_role(ADMIN_ROLE_ID)
 async def in_role(ctx, role_add: discord.Role):
     if not ctx.author.guild_permissions.administrator:
-        await ctx.send("เป็นใคร มาสั่งกู")
+        await ctx.send("<a:ot7:1350101072336654346> เป็นใคร มาสั่งกู")
         return
 
     count = 0
@@ -156,7 +156,7 @@ async def in_role(ctx, role_add: discord.Role):
             await member.add_roles(role_add)
             count += 1
 
-    await ctx.send(f"✅ เพิ่มบทบาท {role_add.mention} ให้กับ {count} คนที่ไม่มีบทบาทในเซิร์ฟเวอร์แล้ว!")
+    await ctx.send(f"<a:ot1:1350094128649736212> เพิ่มบทบาท {role_add.mention} ให้กับ {count} คนที่ไม่มีบทบาทในเซิร์ฟเวอร์แล้ว!")
 
 ####################################################
 
@@ -184,8 +184,8 @@ async def exp(ctx):
 @bot.command()
 async def rank(ctx):
     sorted_users = sorted(USER_EXP.items(), key=lambda x: (x[1][1], x[1][0]), reverse=True)[:10]
-    embed = discord.Embed(title="🏆 **Online Rank VC**", color=discord.Color(0x000000))
-    medals = ["🥇", "🥈", "🥉"]
+    embed = discord.Embed(title="<a:ot3:1350099635229691966> **Online Rank VC**", color=discord.Color(0x000000))
+    medals = ["<a:ot6:1350100419816456252>", "<a:ot5:1350100409963778119>", "<a:ot4:1350100405714944081>"]
     rank_list = []
     
     for i, (user_id, (exp, level)) in enumerate(sorted_users, start=1):
@@ -205,11 +205,11 @@ async def rank(ctx):
 @commands.has_role(ADMIN_ROLE_ID)
 async def lev(ctx, member: discord.Member, level: int, exp: int = 0):
     if level < 1 or level > 100:
-        await ctx.send("🛑 ระดับต้องอยู่ระหว่าง 1-100")
+        await ctx.send("<a:ot7:1350101072336654346> ห้ะ?")
         return
     
     if exp < 0:
-        await ctx.send("🛑 ค่า EXP ต้องเป็นจำนวนเต็มบวก")
+        await ctx.send("<a:ot7:1350101072336654346> ห้ะ??")
         return
 
     USER_EXP[str(member.id)] = (exp, level)
@@ -228,14 +228,14 @@ async def lev(ctx, member: discord.Member, level: int, exp: int = 0):
         channel = guild.get_channel(ANNOUNCE_CHANNEL_ID)
 
         if channel:
-            message = (f"**Level Up!** 🎉⋆.˚⤷ {member.mention} level up to **{level}** 🎀\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+            message = (f"**Level Up!** <a:ot8:1350101721359061183>⋆.˚⤷ {member.mention} level up to <a:ot2:1350097632277565490> **{level}** <a:ot9:1350102207906709627>\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
             await channel.send(message)
 
     # บันทึกข้อมูล
     USER_EXP[str(member.id)] = (exp, level)
     save_exp_data()
   
-    await ctx.send(f"<:kitty2:1346531578502713364> › {member.mention} → ระดับถูกปรับเป็น **{level}** และ EXP เป็น **{exp}** !")
+    await ctx.send(f"<a:ot1:1350094128649736212> › {member.mention} <a:ot2:1350097632277565490> ระดับถูกปรับเป็น **{level}** และ EXP เป็น **{exp}** !")
 
 ####################################################
 
