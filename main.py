@@ -62,7 +62,7 @@ async def update_exp():
                     channel = guild.get_channel(ANNOUNCE_CHANNEL_ID)
 
                     if channel:
-                        message = (f"**Level Up!** <a:ot8:1350101721359061183>⋆.˚⤷ {member.mention} level up to <a:ot2:1350097632277565490> **{level}** <a:ot9:1350102207906709627>\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+                        message = (f"**Level Up!** <a:ot8:1350101721359061183>⋆.˚⤷ {member.mention} level up to <a:kitty00:1346537172315934751>**{level}**<a:kitty00:1346537172315934751> <a:ot8:1350101721359061183>\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
                         await channel.send(message)
 
@@ -73,14 +73,13 @@ async def update_exp():
 async def check_and_give_role(member, level):
     guild = member.guild
     current_roles = {r.id for r in member.roles}
-    
+
     for lvl, role_id in EXP_ROLE_IDS.items():
         role = guild.get_role(role_id)
         if role:
+            
             if level >= lvl and role_id not in current_roles:
                 await member.add_roles(role)
-            elif level < lvl and role_id in current_roles:
-                await member.remove_roles(role)
 
 ####################################################
 """บอทด่า"""
@@ -172,7 +171,7 @@ async def exp(ctx):
     percentage = (exp / next_level_exp) * 100
 
     message = (
-        f"{ctx.author.mention} ➤ Level: {level} | EXP: {int(exp)} / {next_level_exp}\n"
+        f"{ctx.author.mention} <a:ot2:1350097632277565490> Level: {level} | EXP: {int(exp)} / {next_level_exp}\n"
         f"[{bar}] ({percentage:.1f}%)"
     )
 
@@ -184,8 +183,8 @@ async def exp(ctx):
 @bot.command()
 async def rank(ctx):
     sorted_users = sorted(USER_EXP.items(), key=lambda x: (x[1][1], x[1][0]), reverse=True)[:10]
-    embed = discord.Embed(title="<a:ot3:1350099635229691966> **Online Rank VC**", color=discord.Color(0x000000))
-    medals = ["<a:ot6:1350100419816456252>", "<a:ot5:1350100409963778119>", "<a:ot4:1350100405714944081>"]
+    embed = discord.Embed(title="<a:ot6:1350100419816456252> **Online Rank VC**", color=discord.Color(0x000000))
+    medals = ["<a:ot3:1350099635229691966>", "<a:ot4:1350104551247577160>", "<a:ot5:1350104555378966528>"]
     rank_list = []
     
     for i, (user_id, (exp, level)) in enumerate(sorted_users, start=1):
@@ -228,7 +227,7 @@ async def lev(ctx, member: discord.Member, level: int, exp: int = 0):
         channel = guild.get_channel(ANNOUNCE_CHANNEL_ID)
 
         if channel:
-            message = (f"**Level Up!** <a:ot8:1350101721359061183>⋆.˚⤷ {member.mention} level up to <a:ot2:1350097632277565490> **{level}** <a:ot9:1350102207906709627>\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+            message = (f"**Level Up!** <a:ot8:1350101721359061183>⋆.˚⤷ {member.mention} level up to <a:kitty00:1346537172315934751>**{level}**<a:kitty00:1346537172315934751> <a:ot8:1350101721359061183>\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
             await channel.send(message)
 
     # บันทึกข้อมูล
