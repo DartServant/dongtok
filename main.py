@@ -23,7 +23,7 @@ bot = commands.Bot(command_prefix="d!", intents=intents)
 import json
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-google_creds = (os.getenv("GOOGLE_CREDENTIALS"))
+google_creds = json.loads(os.getenv("GOOGLE_CREDENTIALS"))
 scope = ["https://docs.google.com/spreadsheets/d/1Ea_nIYkxs4HOyEfkqXTVz-QaKu5SPBVOUd1Nnp6QMPo/edit?usp=sharing", "https://www.googleapis.com/robot/v1/metadata/x509/romandiscord%40romandiscord.iam.gserviceaccount.com"]
 creds = ServiceAccountCredentials.from_json_keyfile_dict(google_creds, scope)
 client = gspread.authorize(creds)
