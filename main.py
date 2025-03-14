@@ -214,7 +214,27 @@ async def lev(ctx, member: discord.Member, level: int, exp: int = 0):
 
     USER_EXP[str(member.id)] = (exp, level)
     await check_and_give_role(member, level)
-    save_exp_data(str(member.id), exp, level)
+
+    # ตรวจสอบว่าควรแจ้งเตือน Level Up หรือไม่
+    next_level_exp = (level ** 2) * 50
+
+    if exp >= next_level_exp and level < 100:
+        level += 1
+        exp -= next_level_exp
+        await check_and_give_role(member, level)
+
+        # แจ้งเตือน Level Up ใน ANNOUNCE_CHANNEL_ID
+        guild = ctx.guild
+        channel = guild.get_channel(ANNOUNCE_CHANNEL_ID)
+
+        if channel:
+            message = (f"**Level Up!** 🎉⋆.˚⤷ {member.mention} level up to **{level}** 🎀\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+            await channel.send(message)
+
+    # บันทึกข้อมูล
+    USER_EXP[str(member.id)] = (exp, level)
+    save_exp_data()
+  
     await ctx.send(f"☑ › {member.mention} → ระดับถูกปรับเป็น **{level}** และ EXP เป็น **{exp}** !")
 
 ####################################################
